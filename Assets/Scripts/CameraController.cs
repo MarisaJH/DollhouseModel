@@ -1,35 +1,43 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Net;
+using System.Net.Sockets;
+using System;
+using CielaSpike;
 
 public class CameraController : MonoBehaviour
 {
     //public Camera firstPersonCamera;
     //private Camera overheadCamera;
 	public List<Camera> cameras;
+	public int port;
+    private UdpClient client;
+	private byte[] data = new byte[4];
+	private bool update_cam = false;
 
-    private void Start()
+    void Start()
     {	/*
         overheadCamera = Camera.main;
         overheadCamera.enabled = true;
         firstPersonCamera.enabled = false;
 		*/
 		EnableCamera(0);
+		//StartCoroutine(ReceiveData());
+		this.StartCoroutineAsync(ReceiveData());
     }
 
-    private void Update()
-    {/*
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            if (overheadCamera.enabled)
-            {
-                ShowFirstPersonView();
-            }
-            else
-            {
-                ShowOverheadView();
-            }
-        }*/
+    void Update()
+    {
+		if (update_cam) {
+			if (BitConverter.IsLittleEndian) {
+				Array.Reverse(data);
+			}
+			
+			int i = BitConverter.ToInt32(data, 0);
+		    EnableCamera(i);
+			update_cam = false;
+		}
 		
 		if (Input.GetKeyDown(KeyCode.Alpha1)) {
 			EnableCamera(1);
@@ -55,20 +63,31 @@ public class CameraController : MonoBehaviour
 		cameras[i].enabled = true;
 		Debug.Log("enabled " + i.ToString());
 	}
-	/*
-    // Call this function to disable FPS camera,
-    // and enable overhead camera.
-    public void ShowOverheadView()
+	
+	IEnumerator ReceiveData()
     {
-        firstPersonCamera.enabled = false;
-        overheadCamera.enabled = true;
+        Debug.Log("in ReceiveData()");
+        client = new UdpClient(port);
+        while (true)
+        {
+ 
+            try
+            {
+                // get data in bytes
+                IPEndPoint anyIP = new IPEndPoint(IPAddress.Any, 0);
+                data = client.Receive(ref anyIP);
+				Debug.Log("received data");
+				Debug.Log(BitConverter.ToString(data));
+				update_cam = true;
+				//int i = BitConverter.ToInt32(data, 0);
+				//EnableCamera(i);
+               
+            }
+            catch (Exception err)
+            {
+                Debug.Log(err.ToString());
+            }
+            yield return null;
+        }
     }
-
-    // Call this function to enable FPS camera,
-    // and disable overhead camera.
-    public void ShowFirstPersonView()
-    {
-        firstPersonCamera.enabled = true;
-        overheadCamera.enabled = false;
-    }*/
 }

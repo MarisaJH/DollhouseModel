@@ -82,8 +82,8 @@ public class NetworkManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        UnityEngine.Debug.Log(robotTransform.position);
-        UnityEngine.Debug.Log(robotTransform.rotation);
+        //UnityEngine.Debug.Log(robotTransform.position);
+        //UnityEngine.Debug.Log(robotTransform.rotation);
 
         transform.position = robotTransform.position;
         transform.rotation = robotTransform.rotation;
@@ -92,7 +92,7 @@ public class NetworkManager : MonoBehaviour
     // receive thread
     IEnumerator ReceiveData()
     {
-        Debug.Log("in ReceiveData()");
+        //Debug.Log("in ReceiveData()");
         client = new UdpClient(port);
         while (true)
         {

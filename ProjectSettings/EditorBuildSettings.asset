@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/Dollhouse.unity
+    guid: 761be7675fce2a944b9c8faadf8baf88
   m_configObjects: {}
