@@ -87,6 +87,7 @@ public class NetworkManager : MonoBehaviour
 
         transform.position = robotTransform.position;
         transform.rotation = robotTransform.rotation;
+        // transform.position *= 10;
     }
    
     // receive thread
